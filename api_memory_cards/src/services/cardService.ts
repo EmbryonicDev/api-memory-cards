@@ -47,9 +47,9 @@ function getRandomOptions() {
 		"frog", "scalpel", "crocodile", "monster", "stupid", "devil", "crossbow",
 		"vampire", "hungry", "fear", "diamond", "snake", "anger", "dagger"
 	]
-	const shuffledOptions = shuffleArray(cardsOptions).slice(0, 31)
+	const shuffledOptions = shuffleArray(cardsOptions).slice(0, 30)
 	const shuffledCardOptions: CardOption[] = []
-	for (const option of shuffledOptions.slice(0, 6)) {
+	for (const option of shuffledOptions) {
 		const titledCard = option.charAt(0).toUpperCase() + option.slice(1)
 		shuffledCardOptions.push({cardName: titledCard, selected: false})
 	}
