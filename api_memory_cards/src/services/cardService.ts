@@ -1,4 +1,4 @@
-import { shuffleArray } from "../utils/arrayUtils.ts";
+import {shuffleArray} from "../utils/arrayUtils.ts";
 
 type CardOption = {
 	cardName: string;
@@ -27,11 +27,10 @@ const API_KEYS = [
 
 export async function getCards(): Promise<Card[]> {
   const options = getRandomOptions()
-  const cards = await Promise.all(options.map(async (card) => {
-    const src = await fetchUrl(card.cardName);
-    return { ...card, src };
-  }));
-	return cards
+	return await Promise.all(options.map(async (card) => {
+		const src = await fetchUrl(card.cardName);
+		return {...card, src};
+	}))
 }
 
 function getRandomOptions() {
