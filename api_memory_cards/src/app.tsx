@@ -1,5 +1,5 @@
 import './app.css'
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState, useCallback } from "preact/hooks";
 import { Card, getCards } from "./services/cardService.ts";
 import Cards from "./Components/Cards.tsx";
 import { shuffleArray } from "./utils/arrayUtils.ts";
@@ -18,21 +18,28 @@ export function App() {
   console.log(`High Score: ${highScore}`)
 
 
-  // Fetch all Cards
+  const fetchCards = useCallback(async () => {
+    try {
+      const fetchedCards = await getCards();
+      setAllCards(fetchedCards);
+    } catch (error) {
+      console.error("Error fetching cards:", error);
+    }
+  }, []);
+
   useEffect(() => {
     (async () => {
-      try {
-        const fetchedCards = await getCards();
-        setAllCards(fetchedCards);
-      } catch (error) {
-        console.error("Error fetching cards:", error);
-      }
+      await fetchCards();
     })();
-  }, []);
+  }, [fetchCards]);
 
   useEffect(() => {
     localStorage.setItem('highScore', highScore)
   }, [highScore])
+
+  useEffect(() => {
+    getHighScore()
+  }, [gameWon, gameOver])
 
   // Set visible cards && remove them from allCards
   useEffect(() => {
@@ -42,7 +49,6 @@ export function App() {
     } else if (visibleCards.length > 0 && visibleCards.every(card => card.selected)) {
       if (visibleCards.length === 12) {
         setScore(prevState => prevState + scoreMultiplier)
-        getHighScore()
         setGameWon(true)
         // Don't do anything else, game is over
       } else {
@@ -55,7 +61,7 @@ export function App() {
       }
     }
   }, [allCards, visibleCards])
-
+  
   function getHighScore() {
     if (score > parseInt(highScore)) setHighScore(score.toString())
   }
@@ -63,7 +69,6 @@ export function App() {
   function clickCard(clickedCard: Card) {
     if (clickedCard.selected) {
       console.log(`card: ${clickedCard.cardName} has already been selected! Game Over!`);
-      getHighScore()
       setLoserCard([clickedCard])
       setGameOver(true)
     } else {
