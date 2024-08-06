@@ -13,6 +13,51 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#gameInfo,
+#scoreDiv {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px white;
+  border-radius: 12px;
+  width: max-content;
+  padding: 6px;
+}
+
+#gameInfo {
+  align-items: center;
+  padding: 6px;
+  margin-bottom: 6px
+}
+
+#scoreDiv {
+  align-items: flex-start;
+}
+
+.scoreText,
+#gameInfoTitle {
+  margin: 3px;
+}
+
+#gameInfoTitle {
+  align-self: center;
+}
+
+#resetButton {
+  margin-top: 6px;
+  padding: 6px;
+  background: dodgerblue;
+  border-radius: 8px;
+}
+
+#resetButton:hover {
+  background: deepskyblue;
+}
+
 #cardsContainer {
   display: flex;
   justify-content: center;
@@ -30,6 +75,10 @@
   border: 1px solid white;
   border-radius: 5px;
   flex: 0 0 auto;
+}
+
+.cardDiv:hover {
+  transform: scale(1.1);
 }
 
 .cardImage {

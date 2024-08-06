@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "preact/hooks";
 import { Card, getCards } from "./services/cardService.ts";
 import Cards from "./Components/Cards.tsx";
 import { shuffleArray } from "./utils/arrayUtils.ts";
+import { GameInfo } from "./Components/GameInfo.tsx";
 
 export function App() {
   const [allCards, setAllCards] = useState<Card[]>([]);
@@ -13,6 +14,9 @@ export function App() {
   const [highScore, setHighScore] = useState(localStorage.getItem('highScore') || '0');
   const [scoreMultiplier, setScoreMultiplier] = useState(5)
   const [score, setScore] = useState(0)
+  const [level, setLevel] = useState(1)
+
+  const unSelectCards = visibleCards.filter(card => !card.selected).length
 
   console.log(`Score: ${score}`)
   console.log(`High Score: ${highScore}`)
@@ -58,6 +62,7 @@ export function App() {
         });
           setAllCards(allCards.slice(2));
           setScoreMultiplier(prevState => prevState + 5)
+          setLevel(prevState => prevState + 1)
       }
     }
   }, [allCards, visibleCards])
@@ -84,8 +89,29 @@ export function App() {
     }
   }
 
+  async function resetGame() {
+    getHighScore()
+    setScoreMultiplier(5)
+    setLoserCard([])
+    setGameOver(false)
+    setGameWon(false)
+    await fetchCards()
+    setScore(0)
+    setVisibleCards([])
+    setLevel(1)
+  }
+
   return (
     <>
+      <GameInfo
+        gameOver={gameOver}
+        gameWon={gameWon}
+        score={score}
+        highScore={highScore}
+        clickReset={resetGame}
+        unSelectCards={unSelectCards}
+        level={level}
+      />
       {!gameWon && !gameOver &&
         <Cards
           cards={visibleCards}
