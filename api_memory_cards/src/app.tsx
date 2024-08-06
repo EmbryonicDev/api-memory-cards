@@ -7,6 +7,10 @@ import { shuffleArray } from "./utils/arrayUtils.ts";
 export function App() {
   const [allCards, setAllCards] = useState<Card[]>([]);
   const [visibleCards, setVisibleCards] = useState<Card[]>([]);
+  const [gameWon, setGameWon] = useState(false);
+  const [gameOver, setGameOver] = useState(false)
+  const [loserCard, setLoserCard] = useState<Card[]>([])
+
   const selectedCards = visibleCards.filter(card => card.selected)
 
   console.log('selected cards:', selectedCards)
@@ -43,7 +47,8 @@ export function App() {
   function clickCard(clickedCard: Card) {
     if (clickedCard.selected) {
       console.log(`card: ${clickedCard.cardName} has already been selected! Game Over!`);
-      return; // Don't update state if the card was already selected
+      setLoserCard(clickedCard)
+      setGameOver(true)
     }
 
     setVisibleCards(prevCards => {
@@ -52,18 +57,28 @@ export function App() {
           ? { ...card, selected: true }
           : card
       );
-
-      // Shuffle the cards every time a new card is selected
       return shuffleArray(updatedCards);
     });
   }
 
   return (
     <>
-      <Cards
-        cards={visibleCards}
-        clickCard={clickCard}
-      />
+      {!gameWon && !gameOver &&
+        <Cards
+          cards={visibleCards}
+          clickCard={clickCard}
+        />
+      }
+      {gameWon && <h1>You Won!</h1>}
+      {gameOver &&(
+        <>
+          <h1>Game Over!</h1>
+          <h3>You Selected this Card Twice!</h3>
+          <Cards
+            cards={[loserCard!]}
+          />
+        </>
+      )}
     </>
   );
 }
