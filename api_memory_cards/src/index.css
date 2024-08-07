@@ -16,10 +16,78 @@
 body {
   display: flex;
   justify-content: center;
+  margin: 0;
 }
 
-#gameInfo,
-#scoreDiv {
+#app {
+  width: 100vw;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#headerDiv {
+  display: flex;
+  justify-content: space-between;
+  border: solid 1px white;
+  width: 100%;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+#titleDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#titleText {
+  margin: 0;
+}
+
+.score,
+#titleText {
+  padding: 0 12px;
+}
+
+#infoButton {
+  font-size: xx-large;
+  border-radius: 40%;
+  background: green;
+}
+
+#infoButton:hover {
+  background: yellow;
+  color: red;
+  border: 2px solid deeppink;
+}
+
+
+#instructions {
+  position: absolute;
+  top: 50%;
+  left: 12%;
+  background-color: darkslategray;
+  color: lightskyblue;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+#instructions ul {
+  list-style-type: circle;
+  margin: 0;
+}
+
+#instructions li {
+  text-align: left
+}
+
+
+.gameInfo {
   display: flex;
   flex-direction: column;
   border: solid 1px white;
@@ -28,19 +96,20 @@ body {
   padding: 6px;
 }
 
-#gameInfo {
+.gameInfo {
   align-items: center;
   padding: 6px;
-  margin-bottom: 6px
+  margin: 6px 0;
 }
 
-#scoreDiv {
-  align-items: flex-start;
+.gameInfo > * {
+  margin: 0;
 }
 
 .scoreText,
 #gameInfoTitle {
-  margin: 3px;
+  margin: 0;
+  padding: 0;
 }
 
 #gameInfoTitle {
@@ -52,6 +121,7 @@ body {
   padding: 6px;
   background: dodgerblue;
   border-radius: 8px;
+  align-self: center;
 }
 
 #resetButton:hover {

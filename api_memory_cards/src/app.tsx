@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "preact/hooks";
 import { Card, getCards } from "./services/cardService.ts";
 import Cards from "./Components/Cards.tsx";
 import { shuffleArray } from "./utils/arrayUtils.ts";
-import { GameInfo } from "./Components/GameInfo.tsx";
+import Header from "./Components/Header.tsx";
 
 export function App() {
   const [allCards, setAllCards] = useState<Card[]>([]);
@@ -16,7 +16,7 @@ export function App() {
   const [score, setScore] = useState(0)
   const [level, setLevel] = useState(1)
 
-  const unSelectCards = visibleCards.filter(card => !card.selected).length
+  const unClickedCards = visibleCards.filter(card => !card.selected).length
 
   console.log(`Score: ${score}`)
   console.log(`High Score: ${highScore}`)
@@ -66,7 +66,7 @@ export function App() {
       }
     }
   }, [allCards, visibleCards])
-  
+
   function getHighScore() {
     if (score > parseInt(highScore)) setHighScore(score.toString())
   }
@@ -103,14 +103,14 @@ export function App() {
 
   return (
     <>
-      <GameInfo
-        gameOver={gameOver}
-        gameWon={gameWon}
+      <Header
         score={score}
         highScore={highScore}
-        clickReset={resetGame}
-        unSelectCards={unSelectCards}
         level={level}
+        unClickedCards={unClickedCards}
+        gameOver={gameOver}
+        gameWon={gameWon}
+        clickReset={resetGame}
       />
       {!gameWon && !gameOver &&
         <Cards
