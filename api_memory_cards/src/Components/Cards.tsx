@@ -13,14 +13,12 @@ type CardsProps = {
 function NewCard({card, clickCard}: CardProps) {
   const {src, cardName, selected} = card
   return (
-    <div className="cardDiv"  onClick={() => clickCard?.(card)}>
-      <p className="cardTitle">{cardName}</p>
       <img className="cardImage"
+        onClick={() => clickCard?.(card)}
         src={src}
         alt={cardName}
         selected={selected}
       />
-    </div>
   )
 }
 
