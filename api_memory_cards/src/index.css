@@ -25,7 +25,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-image: linear-gradient(to right, #7c3aed, #10b981, #c4b5fd, #6ee7b7, #d1fae5, #d1fae5, #d1fae5, #6ee7b7, #c4b5fd, #10b981, #7c3aed);
+  background-image: linear-gradient(to right, #7c3aed, #10b981, #c4b5fd, #6ee7b7, #ddd6fe, #d1fae5, #ddd6fe, #6ee7b7, #c4b5fd, #10b981, #7c3aed);
 }
 
 #headerDiv {
