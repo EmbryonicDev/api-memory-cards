@@ -1,83 +1,81 @@
-import './app.css'
+import './app.css';
 import { useEffect, useState, useCallback } from "preact/hooks";
-import { Card, getCards } from "./services/cardService.ts";
+import { Card, CardOption, getRandomOptions, fetchCardImage } from "./services/cardService.ts";
 import Cards from "./Components/Cards.tsx";
 import { shuffleArray } from "./utils/arrayUtils.ts";
 import Header from "./Components/Header.tsx";
 
 export function App() {
-  const [allCards, setAllCards] = useState<Card[]>([]);
+  const [allCardOptions, setAllCardOptions] = useState<CardOption[]>([]);
   const [visibleCards, setVisibleCards] = useState<Card[]>([]);
   const [gameWon, setGameWon] = useState(false);
-  const [gameOver, setGameOver] = useState(false)
-  const [loserCard, setLoserCard] = useState<Card[]>([])
+  const [gameOver, setGameOver] = useState(false);
+  const [loserCard, setLoserCard] = useState<Card[]>([]);
   const [highScore, setHighScore] = useState(localStorage.getItem('highScore') || '0');
-  const [scoreMultiplier, setScoreMultiplier] = useState(5)
-  const [score, setScore] = useState(0)
-  const [level, setLevel] = useState(1)
+  const [scoreMultiplier, setScoreMultiplier] = useState(5);
+  const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
 
-  const unClickedCards = visibleCards.filter(card => !card.selected).length
+  const unClickedCards = visibleCards.filter(card => !card.selected).length;
 
-  console.log(`Score: ${score}`)
-  console.log(`High Score: ${highScore}`)
-
-
-  const fetchCards = useCallback(async () => {
-    try {
-      const fetchedCards = await getCards();
-      setAllCards(fetchedCards);
-    } catch (error) {
-      console.error("Error fetching cards:", error);
-    }
+  const initializeCardOptions = useCallback(() => {
+    const options = getRandomOptions();
+    setAllCardOptions(options);
   }, []);
 
   useEffect(() => {
+    initializeCardOptions();
+  }, [initializeCardOptions]);
+
+  useEffect(() => {
+    localStorage.setItem('highScore', highScore);
+  }, [highScore]);
+
+  useEffect(() => {
+    getHighScore();
+  }, [gameWon, gameOver]);
+
+  useEffect(() => {
+    const cardsPerLevel = 6;
     (async () => {
-      await fetchCards();
-    })();
-  }, [fetchCards]);
-
-  useEffect(() => {
-    localStorage.setItem('highScore', highScore)
-  }, [highScore])
-
-  useEffect(() => {
-    getHighScore()
-  }, [gameWon, gameOver])
-
-  // Set visible cards && remove them from allCards
-  useEffect(() => {
-    if (allCards.length > 0 && !visibleCards.length) {
-      setVisibleCards(allCards.slice(0, 2));
-      setAllCards(allCards.slice(2));
-    } else if (visibleCards.length > 0 && visibleCards.every(card => card.selected)) {
-      if (visibleCards.length === 12) {
-        setScore(prevState => prevState + scoreMultiplier)
-        setGameWon(true)
-        // Don't do anything else, game is over
-      } else {
-        setVisibleCards(prevVisible => {
-          const newVisible = [...prevVisible, ...allCards.slice(0, 2)];
-          return shuffleArray(newVisible);
-        });
-          setAllCards(allCards.slice(2));
-          setScoreMultiplier(prevState => prevState + 5)
-          setLevel(prevState => prevState + 1)
+      async function addVisibleCards() {
+        if (allCardOptions.length > 0 && visibleCards.length < cardsPerLevel) {
+          const newCards = await Promise.all(
+            allCardOptions.slice(0, 6 - visibleCards.length).map(fetchCardImage)
+          );
+          setVisibleCards(prevVisible => [...prevVisible, ...newCards]);
+          setAllCardOptions(prevOptions => prevOptions.slice(cardsPerLevel - visibleCards.length));
+        } else if (visibleCards.length > 0 && visibleCards.every(card => card.selected)) {
+          if (visibleCards.length === 30) {
+            setScore(prevState => prevState + scoreMultiplier);
+            setGameWon(true);
+          } else {
+            const newCards = await Promise.all(allCardOptions.slice(0, cardsPerLevel).map(fetchCardImage));
+            setVisibleCards(prevVisible => {
+              const newVisible = [...prevVisible, ...newCards];
+              return shuffleArray(newVisible);
+            });
+            setAllCardOptions(prevOptions => prevOptions.slice(cardsPerLevel));
+            setScoreMultiplier(prevState => prevState + 5);
+            setLevel(prevState => prevState + 1);
+          }
+        }
       }
-    }
-  }, [allCards, visibleCards])
+      await addVisibleCards();
+    })();
+  }, [allCardOptions, visibleCards, scoreMultiplier]);
 
   function getHighScore() {
-    if (score > parseInt(highScore)) setHighScore(score.toString())
+    if (score > parseInt(highScore)) setHighScore(score.toString());
   }
 
   function clickCard(clickedCard: Card) {
     if (clickedCard.selected) {
       console.log(`card: ${clickedCard.cardName} has already been selected! Game Over!`);
-      setLoserCard([clickedCard])
-      setGameOver(true)
+      setLoserCard([clickedCard]);
+      setGameOver(true);
     } else {
-      setScore(prevState => prevState + scoreMultiplier)
+      setScore(prevState => prevState + scoreMultiplier);
       setVisibleCards(prevCards => {
         const updatedCards = prevCards.map(card =>
           card.cardName === clickedCard.cardName
@@ -90,15 +88,15 @@ export function App() {
   }
 
   async function resetGame() {
-    getHighScore()
-    setScoreMultiplier(5)
-    setLoserCard([])
-    setGameOver(false)
-    setGameWon(false)
-    await fetchCards()
-    setScore(0)
-    setVisibleCards([])
-    setLevel(1)
+    getHighScore();
+    setScoreMultiplier(5);
+    setLoserCard([]);
+    setGameOver(false);
+    setGameWon(false);
+    initializeCardOptions();
+    setScore(0);
+    setVisibleCards([]);
+    setLevel(1);
   }
 
   return (
