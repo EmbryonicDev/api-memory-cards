@@ -1,6 +1,6 @@
 import {shuffleArray} from "../utils/arrayUtils.ts";
 
-type CardOption = {
+export type CardOption = {
 	cardName: string;
   selected: boolean
 }
@@ -25,35 +25,31 @@ const API_KEYS = [
 	'6iGb9LD9uDLWaFisqYqe4WzfXFMaurWx&q'
 ];
 
-export async function getCards(): Promise<Card[]> {
-  const options = getRandomOptions()
-	return await Promise.all(options.map(async (card) => {
-		const src = await fetchUrl(card.cardName);
-		return {...card, src};
-	}))
+export function getRandomOptions() {
+ const cardsOptions = [
+  "flower", "tree", "apple", "car", "dragon", "motorcycle", "butterfly", "rainbow", "sun",
+  "moon", "star", "cloud", "umbrella", "book", "pencil", "guitar", "piano", "drum",
+  "cat", "dog", "bird", "fish", "elephant", "giraffe", "lion", "tiger", "bear",
+  "panda", "koala", "penguin", "dolphin", "whale", "octopus", "seahorse", "turtle",
+  "frog", "bee", "ladybug", "ant", "spider", "butterfly", "dragonfly", "firefly",
+  "rocket", "airplane", "train", "boat", "bicycle", "skateboard", "balloon", "kite",
+  "castle", "house", "skyscraper", "bridge", "lighthouse", "windmill", "tent",
+  "camera", "television", "computer", "phone", "watch", "glasses", "hat", "shoe",
+  "pizza", "ice cream", "cake", "candy", "hamburger", "sushi", "taco", "popcorn",
+  "soccer ball", "basketball", "football", "tennis racket", "baseball", "golf club",
+  "paintbrush", "palette", "easel", "scissors", "needle", "thread", "compass", "map",
+  "treasure chest", "key", "lock", "crown", "wand", "crystal ball"
+	]
+  const shuffledOptions = shuffleArray(cardsOptions).slice(0, 30);
+  return shuffledOptions.map(option => ({
+    cardName: option.charAt(0).toUpperCase() + option.slice(1),
+    selected: false
+  }));
 }
 
-function getRandomOptions() {
-	const cardsOptions = [
-		"grave", "knife", "pistol", "skull", "cold", "poison", "axe", "ghost", "chain",
-		"dagger", "sword", "bomb", "whiskey", "dream catcher", "stallion", "lock", "shackle", "spike",
-		"guillotine", "no", "dungeon", "jail", "storm", "mummy", "lightbulb", "explosion",
-		"crazy", "raven", "bat", "wolf", "spider", "scorpion", "vulture", "shark", "wasp",
-		"lion", "rat", "crow", "mo	th", "cobra", "wasp", "nurse", "bear", "bone", "fire",
-		"syringe", "worm", "mask", "priest", "lightning", "slime", "doll", "mirror", "candle",
-		"oak", "ship", "sick", "feather", "throne", "crown", "scepter", "dragon",
-		"enemy", "crying", "book", "crash", "secret", "chains", "death", "statue",
-		"gargoyle", "moon", "witch", "insect", "spiderweb", "beer", "amulet",
-		"frog", "scalpel", "crocodile", "monster", "stupid", "devil", "crossbow",
-		"vampire", "hungry", "fear", "diamond", "snake", "anger", "dagger"
-	]
-	const shuffledOptions = shuffleArray(cardsOptions).slice(0, 30)
-	const shuffledCardOptions: CardOption[] = []
-	for (const option of shuffledOptions) {
-		const titledCard = option.charAt(0).toUpperCase() + option.slice(1)
-		shuffledCardOptions.push({cardName: titledCard, selected: false})
-	}
-	return shuffledCardOptions
+export async function fetchCardImage(card: CardOption): Promise<Card> {
+  const src = await fetchUrl(card.cardName);
+  return { ...card, src };
 }
 
 function fetchUrl(term: string): Promise<string> {
