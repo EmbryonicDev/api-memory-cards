@@ -4,7 +4,6 @@ type GameInfoProps = {
 	score: number
 	unClickedCards: number
 	level: number
-	clickReset: () => void
 }
 
 export function GameInfo({gameOver, gameWon, score, unClickedCards, level}: GameInfoProps) {

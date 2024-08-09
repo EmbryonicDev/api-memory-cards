@@ -58,10 +58,8 @@ export default function Header(props: headerProps) {
         gameOver={gameOver}
         gameWon={gameWon}
         score={score}
-        highScore={highScore}
         unClickedCards={unClickedCards}
         level={level}
-        clickReset={clickReset}
       />
       <div className="score">
         <h2>High Score</h2>
