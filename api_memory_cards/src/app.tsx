@@ -37,28 +37,28 @@ export function App() {
 
   useEffect(() => {
     const cardsPerLevel = 6;
+    const levels = 5;
     (async () => {
       async function addVisibleCards() {
         if (allCardOptions.length > 0 && visibleCards.length < cardsPerLevel) {
           const newCards = await Promise.all(
-            allCardOptions.slice(0, 6 - visibleCards.length).map(fetchCardImage)
+            allCardOptions.slice(0, cardsPerLevel - visibleCards.length).map(fetchCardImage)
           );
           setVisibleCards(prevVisible => [...prevVisible, ...newCards]);
           setAllCardOptions(prevOptions => prevOptions.slice(cardsPerLevel - visibleCards.length));
         } else if (visibleCards.length > 0 && visibleCards.every(card => card.selected)) {
-          if (visibleCards.length === 30) {
-            setScore(prevState => prevState + scoreMultiplier);
-            setGameWon(true);
-          } else {
-            const newCards = await Promise.all(allCardOptions.slice(0, cardsPerLevel).map(fetchCardImage));
-            setVisibleCards(prevVisible => {
-              const newVisible = [...prevVisible, ...newCards];
-              return shuffleArray(newVisible);
-            });
-            setAllCardOptions(prevOptions => prevOptions.slice(cardsPerLevel));
-            setScoreMultiplier(prevState => prevState + 5);
-            setLevel(prevState => prevState + 1);
-          }
+            if (visibleCards.length === cardsPerLevel * levels) {
+              setGameWon(true);
+            } else {
+              const newCards = await Promise.all(allCardOptions.slice(0, cardsPerLevel).map(fetchCardImage));
+              setVisibleCards(prevVisible => {
+                const newVisible = [...prevVisible, ...newCards];
+                return shuffleArray(newVisible);
+              });
+              setAllCardOptions(prevOptions => prevOptions.slice(cardsPerLevel));
+              setScoreMultiplier(prevState => prevState + 5);
+              setLevel(prevState => prevState + 1);
+            }
         }
       }
       await addVisibleCards();
@@ -71,7 +71,6 @@ export function App() {
 
   function clickCard(clickedCard: Card) {
     if (clickedCard.selected) {
-      console.log(`card: ${clickedCard.cardName} has already been selected! Game Over!`);
       setLoserCard([clickedCard]);
       setGameOver(true);
     } else {

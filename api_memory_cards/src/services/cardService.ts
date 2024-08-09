@@ -27,7 +27,7 @@ const API_KEYS = [
 
 export function getRandomOptions() {
  const cardsOptions = [
-  "flower", "tree", "apple", "car", "dragon", "motorcycle", "butterfly", "rainbow", "sun",
+  "flower", "tree", "apple", "car", "dragon", "motorcycle", "butterfly", "donut", "sun",
   "moon", "star", "cloud", "umbrella", "book", "pencil", "guitar", "piano", "drum",
   "cat", "dog", "bird", "fish", "elephant", "giraffe", "lion", "tiger", "bear",
   "panda", "koala", "penguin", "dolphin", "whale", "octopus", "seahorse", "turtle",
@@ -37,7 +37,7 @@ export function getRandomOptions() {
   "camera", "television", "computer", "phone", "watch", "glasses", "hat", "shoe",
   "pizza", "ice cream", "cake", "candy", "hamburger", "sushi", "taco", "popcorn",
   "soccer ball", "basketball", "football", "tennis racket", "baseball", "golf club",
-  "paintbrush", "palette", "easel", "scissors", "needle", "thread", "compass", "map",
+  "paintbrush", "palette", "horse", "scissors", "needle", "thread", "compass", "map",
   "treasure chest", "key", "lock", "crown", "wand", "crystal ball"
 	]
   const shuffledOptions = shuffleArray(cardsOptions).slice(0, 30);
@@ -54,7 +54,7 @@ export async function fetchCardImage(card: CardOption): Promise<Card> {
 
 function fetchUrl(term: string): Promise<string> {
 	return fetch(
-		`https://api.giphy.com/v1/stickers/search?api_key=${API_KEYS[Math.floor(Math.random() * 2) + 1]}=${term}&limit=25&offset=0&rating=g&lang=en&bundle=messaging_non_clips`,
+		`https://api.giphy.com/v1/stickers/search?api_key=${API_KEYS[Math.floor(Math.random() * 3) + 1]}=${term}&limit=25&offset=0&rating=g&lang=en&bundle=messaging_non_clips`,
 		{ mode: 'cors' }
 	)
 		.then((response: Response) => response.json())
