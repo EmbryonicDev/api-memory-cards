@@ -12,20 +12,21 @@
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  margin: 0;
-}
-
-#app {
   width: 100vw;
   height: 100vh;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  background-image: linear-gradient(to right, #7c3aed, #10b981, #c4b5fd, #6ee7b7, #ddd6fe, #d1fae5, #ddd6fe, #6ee7b7, #c4b5fd, #10b981, #7c3aed);
+  align-items: stretch;
+  background-image: linear-gradient(to right, #2563eb, #64748b, #94a3b8, #cbd5e1, #e2e8f0, #f1f5f9, #e2e8f0, #cbd5e1, #94a3b8, #64748b, #2563eb);
+}
+
+#app {
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
 #headerDiv {
